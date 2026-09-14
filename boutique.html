@@ -176,6 +176,9 @@
   <div class="wrap boutique-head">
     <h1>Pagnes &amp; tissus, choisis pour votre prochaine pièce</h1>
     <p>Wax, bazin, lin et coton — vendus au coupon, à commander seuls ou à associer à une commande sur-mesure chez un atelier partenaire.</p>
+    <div id="banniereAtelier" style="display:none;margin-top:18px;background:var(--ecru-deep);border:1px solid var(--line);padding:14px 18px;font-size:14px;">
+      Vous choisissez un tissu pour votre commande en cours. <a href="#" id="lienRetourAtelier" style="color:var(--brass);">← Retour à la commande sans choisir</a>
+    </div>
     <div class="filtres">
       <div class="filtre active" data-filtre="tous">Tous</div>
       <div class="filtre" data-filtre="wax">Wax</div>
@@ -235,11 +238,21 @@
   var grid = document.getElementById('produitsGrid');
   var panier = {};
 
+  var boutiqueParams = new URLSearchParams(window.location.search);
+  var pourAtelier = boutiqueParams.get('pourAtelier');
+  if(pourAtelier){
+    document.getElementById('banniereAtelier').style.display = 'block';
+    document.getElementById('lienRetourAtelier').href = 'atelier.html?id=' + pourAtelier;
+  }
+
   function renderProduits(filtre){
     grid.innerHTML = '';
     produits.filter(function(p){ return filtre === 'tous' || p.cat === filtre; }).forEach(function(p){
       var div = document.createElement('div');
       div.className = 'produit';
+      var boutonHtml = pourAtelier
+        ? '<button class="btn-ajouter" data-choisir="' + p.id + '">Choisir ce tissu</button>'
+        : '<button class="btn-ajouter" data-id="' + p.id + '">Ajouter</button>';
       div.innerHTML =
         '<div class="produit-visuel">' + svgFor(p) + '</div>' +
         '<div class="produit-info">' +
@@ -248,12 +261,19 @@
           '<div class="produit-meta">' + p.metrage + '</div>' +
           '<div class="produit-bas">' +
             '<span class="produit-prix">' + p.prix + ' €</span>' +
-            '<button class="btn-ajouter" data-id="' + p.id + '">Ajouter</button>' +
+            boutonHtml +
           '</div>' +
         '</div>';
       grid.appendChild(div);
     });
-    document.querySelectorAll('.btn-ajouter').forEach(function(btn){
+    document.querySelectorAll('[data-choisir]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id = btn.getAttribute('data-choisir');
+        var p = produits.find(function(x){ return x.id == id; });
+        window.location.href = 'atelier.html?id=' + pourAtelier + '&tissu=' + encodeURIComponent(p.nom);
+      });
+    });
+    document.querySelectorAll('.btn-ajouter[data-id]').forEach(function(btn){
       btn.addEventListener('click', function(){
         var id = btn.getAttribute('data-id');
         panier[id] = (panier[id] || 0) + 1;
