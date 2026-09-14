@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tailleur-Connect — Ateliers de couture sur-mesure</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C1B19;
+    --ecru:#F6F1E7;
+    --ecru-deep:#EDE5D3;
+    --brass:#B8892B;
+    --brass-soft:#D9B36C;
+    --sienna:#8B5E3C;
+    --white:#FFFDF8;
+    --line: rgba(28,27,25,0.14);
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--ecru);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    font-size:16px;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:500;
+    margin:0;
+    letter-spacing:-0.01em;
+  }
+  a{color:inherit;text-decoration:none;}
+  img{max-width:100%;display:block;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  /* ---- Ruban / measuring-tape divider ---- */
+  .ruban{
+    height:22px;
+    background-image: repeating-linear-gradient(
+      90deg,
+      var(--ink) 0px, var(--ink) 1.5px,
+      transparent 1.5px, transparent 24px
+    );
+    background-color:var(--brass-soft);
+    background-position: 0 100%;
+    background-size: 100% 8px;
+    background-repeat:no-repeat;
+    position:relative;
+    opacity:0.9;
+  }
+  .ruban::after{
+    content:"TAILLEUR-CONNECT · SUR MESURE · TAILLEUR-CONNECT · SUR MESURE ·";
+    position:absolute;
+    top:-1px;left:0;right:0;
+    font-family:'Work Sans',sans-serif;
+    font-size:10px;
+    letter-spacing:0.12em;
+    color:var(--ink);
+    white-space:nowrap;
+    overflow:hidden;
+    padding-left:4px;
+    line-height:22px;
+    opacity:0.55;
+  }
+
+  /* ---- Header / nav ---- */
+  header{
+    background:var(--ecru);
+    border-bottom:1px solid var(--line);
+    position:sticky;
+    top:0;
+    z-index:50;
+  }
+  .nav-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 0;
+  }
+  .logo{
+    font-family:'Fraunces', serif;
+    font-size:22px;
+    font-weight:600;
+    display:flex;
+    align-items:baseline;
+    gap:2px;
+  }
+  .logo .dash{color:var(--brass);}
+  nav ul{
+    list-style:none;
+    display:flex;
+    gap:32px;
+    margin:0;
+    padding:0;
+  }
+  nav a{
+    font-size:14.5px;
+    padding-bottom:4px;
+    border-bottom:1px solid transparent;
+    transition:border-color .2s ease;
+  }
+  nav a:hover{border-color:var(--brass);}
+  .nav-cta{
+    background:var(--ink);
+    color:var(--ecru);
+    padding:10px 20px;
+    border-radius:2px;
+    font-size:14px;
+    font-weight:500;
+  }
+  .burger{display:none;background:none;border:none;padding:4px;cursor:pointer;}
+  .burger span{display:block;width:24px;height:2px;background:var(--ink);margin:5px 0;}
+
+  /* ---- Hero ---- */
+  .hero{
+    padding:88px 0 72px;
+    position:relative;
+  }
+  .hero-grid{
+    display:grid;
+    grid-template-columns:1.15fr 0.85fr;
+    gap:56px;
+    align-items:center;
+  }
+  .eyebrow-line{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:22px;
+    font-size:13.5px;
+    color:var(--sienna);
+  }
+  .eyebrow-line svg{flex-shrink:0;}
+  .hero h1{
+    font-size:clamp(38px, 5.2vw, 60px);
+    line-height:1.06;
+    max-width:11.5ch;
+  }
+  .hero h1 em{
+    font-style:italic;
+    color:var(--sienna);
+  }
+  .hero p.lead{
+    margin-top:24px;
+    font-size:18px;
+    max-width:46ch;
+    color:#3a3835;
+  }
+  .hero-actions{
+    margin-top:34px;
+    display:flex;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .btn-primary{
+    background:var(--ink);
+    color:var(--ecru);
+    padding:15px 28px;
+    font-size:15px;
+    font-weight:500;
+    border-radius:2px;
+    border:1px solid var(--ink);
+  }
+  .btn-secondary{
+    padding:15px 28px;
+    font-size:15px;
+    font-weight:500;
+    border-radius:2px;
+    border:1px solid var(--ink);
+    color:var(--ink);
+  }
+  .hero-figure{
+    position:relative;
+    aspect-ratio:4/5;
+    background:var(--ecru-deep);
+    border:1px solid var(--line);
+    overflow:hidden;
+  }
+  .hero-figure svg{width:100%;height:100%;}
+  .hero-tag{
+    position:absolute;
+    bottom:18px;
+    left:18px;
+    background:var(--white);
+    border:1px solid var(--line);
+    padding:12px 16px;
+    font-size:13px;
+    max-width:220px;
+    box-shadow:0 6px 18px rgba(0,0,0,0.08);
+  }
+  .hero-tag .num{
+    font-family:'Fraunces', serif;
+    font-size:20px;
+    color:var(--brass);
+    display:block;
+  }
+
+  /* ---- Stats strip ---- */
+  .stats{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .stat{
+    padding:26px 24px;
+    border-right:1px solid var(--line);
+  }
+  .stat:last-child{border-right:none;}
+  .stat .num{
+    font-family:'Fraunces', serif;
+    font-size:30px;
+    color:var(--ink);
+  }
+  .stat .label{
+    font-size:13.5px;
+    color:#5c5952;
+    margin-top:2px;
+  }
+
+  /* ---- Section shell ---- */
+  section.block{padding:80px 0;}
+  .section-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    gap:24px;
+    margin-bottom:44px;
+    flex-wrap:wrap;
+  }
+  .section-head h2{
+    font-size:clamp(28px,3.2vw,38px);
+    max-width:16ch;
+  }
+  .section-head p{
+    max-width:34ch;
+    color:#5c5952;
+    font-size:15.5px;
+  }
+
+  /* ---- Ateliers ---- */
+  .ateliers-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+  }
+  .atelier-card{
+    background:var(--white);
+    padding:28px 26px 26px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .atelier-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+  }
+  .atelier-initial{
+    width:44px;height:44px;
+    background:var(--ink);
+    color:var(--ecru);
+    font-family:'Fraunces',serif;
+    font-size:17px;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .atelier-city{
+    font-size:12.5px;
+    color:var(--sienna);
+    text-align:right;
+  }
+  .atelier-card h3{font-size:19px;margin-top:4px;}
+  .atelier-specialite{font-size:14px;color:#5c5952;}
+  .atelier-meta{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:auto;
+    padding-top:14px;
+    border-top:1px solid var(--line);
+    font-size:13px;
+  }
+  .atelier-note{color:var(--brass);font-weight:500;}
+
+  /* ---- Comment ça marche ---- */
+  .etapes{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:0;
+    position:relative;
+  }
+  .etape{
+    padding:0 22px 0 0;
+    position:relative;
+  }
+  .etape:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    top:11px;right:0;
+    width:22px;height:1px;
+    background:var(--line);
+  }
+  .etape .mark{
+    font-family:'Fraunces',serif;
+    font-size:15px;
+    color:var(--brass);
+    border:1px solid var(--brass);
+    width:26px;height:26px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:18px;
+  }
+  .etape h3{font-size:17px;margin-bottom:8px;}
+  .etape p{font-size:14.5px;color:#5c5952;}
+
+  /* ---- Paiement strip ---- */
+  .paiement{
+    background:var(--ink);
+    color:var(--ecru);
+  }
+  .paiement .wrap{
+    padding:64px 24px;
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:48px;
+    align-items:center;
+  }
+  .paiement h2{color:var(--ecru);font-size:clamp(26px,3vw,34px);max-width:14ch;}
+  .paiement-split{
+    display:flex;
+    border:1px solid rgba(246,241,231,0.25);
+  }
+  .paiement-half{
+    flex:1;
+    padding:22px;
+  }
+  .paiement-half:first-child{border-right:1px solid rgba(246,241,231,0.25);}
+  .paiement-half .pct{
+    font-family:'Fraunces',serif;
+    font-size:32px;
+    color:var(--brass-soft);
+  }
+  .paiement-half .lbl{font-size:13.5px;opacity:0.8;margin-top:4px;}
+
+  /* ---- Footer ---- */
+  footer{padding:56px 0 40px;}
+  .footer-grid{
+    display:grid;
+    grid-template-columns:1.4fr 1fr 1fr;
+    gap:40px;
+    padding-bottom:36px;
+    border-bottom:1px solid var(--line);
+  }
+  footer h4{font-size:13.5px;margin-bottom:14px;color:#5c5952;}
+  footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px;font-size:14.5px;}
+  .footer-bottom{
+    padding-top:22px;
+    display:flex;
+    justify-content:space-between;
+    font-size:13px;
+    color:#5c5952;
+    flex-wrap:wrap;
+    gap:10px;
+  }
+
+  @media (max-width:860px){
+    nav ul, .nav-cta{display:none;}
+    .burger{display:block;}
+    .hero-grid{grid-template-columns:1fr;}
+    .hero-figure{order:-1;aspect-ratio:16/10;}
+    .stats{grid-template-columns:1fr;}
+    .stat{border-right:none;border-bottom:1px solid var(--line);}
+    .stat:last-child{border-bottom:none;}
+    .ateliers-grid{grid-template-columns:1fr;}
+    .etapes{grid-template-columns:1fr 1fr;row-gap:32px;}
+    .etape:nth-child(2)::after{display:none;}
+    .paiement .wrap{grid-template-columns:1fr;}
+    .footer-grid{grid-template-columns:1fr;gap:28px;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a href="#top" class="logo">Tailleur<span class="dash">-</span>Connect</a>
+    <nav>
+      <ul>
+        <li><a href="#ateliers">Ateliers</a></li>
+        <li><a href="#comment">Comment ça marche</a></li>
+        <li><a href="#paiement">Paiement &amp; livraison</a></li>
+        <li><a href="#devenir">Devenir couturier</a></li>
+      </ul>
+    </nav>
+    <a href="#ateliers" class="nav-cta">Trouver un atelier</a>
+    <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<div class="ruban"></div>
+
+<main id="top">
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <div class="eyebrow-line">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12h16M4 12l4-4M4 12l4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Mise en relation avec des ateliers vérifiés
+        </div>
+        <h1>Votre <em>couturier</em>, choisi et réservé en quelques minutes.</h1>
+        <p class="lead">
+          Prise de mesure, essayage ou pièce sur-mesure : trouvez l'atelier qui correspond à votre besoin, réservez un créneau ou passez commande, et suivez la fabrication jusqu'à la livraison.
+        </p>
+        <div class="hero-actions">
+          <a href="#ateliers" class="btn-primary">Trouver un atelier</a>
+          <a href="#devenir" class="btn-secondary">Je suis couturier</a>
+        </div>
+      </div>
+      <div class="hero-figure">
+        <svg viewBox="0 0 400 500" xmlns="http://www.w3.org/2000/svg">
+          <rect width="400" height="500" fill="#EDE5D3"/>
+          <g stroke="#1C1B19" stroke-width="1" opacity="0.5">
+            <line x1="0" y1="90" x2="400" y2="90"/>
+            <line x1="0" y1="410" x2="400" y2="410"/>
+          </g>
+          <circle cx="200" cy="250" r="120" fill="none" stroke="#8B5E3C" stroke-width="1.4" stroke-dasharray="3 6"/>
+          <path d="M120 320 Q200 380 280 320" stroke="#B8892B" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+          <circle cx="120" cy="320" r="4" fill="#1C1B19"/>
+          <circle cx="280" cy="320" r="4" fill="#1C1B19"/>
+          <g transform="translate(150,150)">
+            <rect x="0" y="0" width="100" height="70" rx="2" fill="#F6F1E7" stroke="#1C1B19" stroke-width="1"/>
+            <line x1="10" y1="15" x2="90" y2="15" stroke="#1C1B19" stroke-width="1"/>
+            <line x1="10" y1="30" x2="70" y2="30" stroke="#1C1B19" stroke-width="1"/>
+            <line x1="10" y1="45" x2="80" y2="45" stroke="#1C1B19" stroke-width="1"/>
+          </g>
+        </svg>
+        <div class="hero-tag">
+          <span class="num">48h</span>
+          Délai moyen de réponse d'un atelier après votre demande
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="stats">
+    <div class="stat"><div class="num">120+</div><div class="label">Ateliers partenaires</div></div>
+    <div class="stat"><div class="num">2</div><div class="label">Formules : rendez-vous ou sur-mesure</div></div>
+    <div class="stat"><div class="num">30%</div><div class="label">Acompte à la commande, solde à la livraison</div></div>
+  </div>
+
+  <section class="block" id="ateliers">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Des ateliers proches de vous, par spécialité</h2>
+        <p>Filtrez par ville, type de vêtement ou disponibilité pour trouver le bon atelier.</p>
+      </div>
+      <div class="ateliers-grid">
+        <div class="atelier-card">
+          <div class="atelier-top">
+            <div class="atelier-initial">A</div>
+            <div class="atelier-city">Bruxelles</div>
+          </div>
+          <h3>Atelier Amara</h3>
+          <div class="atelier-specialite">Robes de cérémonie, retouches</div>
+          <div class="atelier-meta">
+            <span class="atelier-note">4,8 · 96 avis</span>
+            <span>RDV + sur-mesure</span>
+          </div>
+        </div>
+        <div class="atelier-card">
+          <div class="atelier-top">
+            <div class="atelier-initial">M</div>
+            <div class="atelier-city">Liège</div>
+          </div>
+          <h3>Maison Ilunga</h3>
+          <div class="atelier-specialite">Costumes homme, wax moderne</div>
+          <div class="atelier-meta">
+            <span class="atelier-note">4,9 · 61 avis</span>
+            <span>Sur-mesure</span>
+          </div>
+        </div>
+        <div class="atelier-card">
+          <div class="atelier-top">
+            <div class="atelier-initial">K</div>
+            <div class="atelier-city">Anvers</div>
+          </div>
+          <h3>Kanzu Studio</h3>
+          <div class="atelier-specialite">Prise de mesure, essayages</div>
+          <div class="atelier-meta">
+            <span class="atelier-note">4,7 · 38 avis</span>
+            <span>RDV uniquement</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="block" id="comment">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Comment ça marche</h2>
+        <p>Deux façons de passer par un atelier, une seule plateforme.</p>
+      </div>
+      <div class="etapes">
+        <div class="etape">
+          <div class="mark">1</div>
+          <h3>Choisissez l'atelier</h3>
+          <p>Parcourez les profils, spécialités et avis avant de faire votre choix.</p>
+        </div>
+        <div class="etape">
+          <div class="mark">2</div>
+          <h3>RDV ou commande</h3>
+          <p>Réservez un créneau de mesure, ou lancez une commande sur-mesure.</p>
+        </div>
+        <div class="etape">
+          <div class="mark">3</div>
+          <h3>Acompte en ligne</h3>
+          <p>Validez la commande avec un acompte ; l'atelier démarre la fabrication.</p>
+        </div>
+        <div class="etape">
+          <div class="mark">4</div>
+          <h3>Solde &amp; livraison</h3>
+          <p>Réglez le solde au retrait en atelier ou à la livraison à domicile.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="paiement" id="paiement">
+    <div class="wrap">
+      <h2>Un paiement en deux temps, clair pour tout le monde</h2>
+      <div class="paiement-split">
+        <div class="paiement-half">
+          <div class="pct">Acompte</div>
+          <div class="lbl">Réglé en ligne pour confirmer la commande sur-mesure et lancer la fabrication.</div>
+        </div>
+        <div class="paiement-half">
+          <div class="pct">Solde</div>
+          <div class="lbl">Réglé au retrait en atelier, ou à la livraison à domicile — au choix du client.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-grid">
+      <div>
+        <div class="logo" style="margin-bottom:14px;">Tailleur<span class="dash">-</span>Connect</div>
+        <p style="max-width:34ch;font-size:14.5px;color:#5c5952;">La plateforme qui relie particuliers et ateliers de couture, pour un rendez-vous ou une pièce sur-mesure.</p>
+      </div>
+      <div>
+        <h4>Plateforme</h4>
+        <ul>
+          <li><a href="#ateliers">Trouver un atelier</a></li>
+          <li><a href="#comment">Comment ça marche</a></li>
+          <li><a href="#paiement">Paiement &amp; livraison</a></li>
+        </ul>
+      </div>
+      <div id="devenir">
+        <h4>Ateliers</h4>
+        <ul>
+          <li><a href="#">Devenir partenaire</a></li>
+          <li><a href="#">Espace couturier</a></li>
+          <li><a href="#">Nous contacter</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Tailleur-Connect</span>
+      <span>Une plateforme Misswaxbeautycare Consulting</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
