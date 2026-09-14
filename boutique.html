@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boutique — Pagnes &amp; tissus — Tailleur-Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C1B19;
+    --ecru:#F6F1E7;
+    --ecru-deep:#EDE5D3;
+    --brass:#B8892B;
+    --brass-soft:#D9B36C;
+    --sienna:#8B5E3C;
+    --white:#FFFDF8;
+    --line: rgba(28,27,25,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;background:var(--ecru);color:var(--ink);
+    font-family:'Work Sans', sans-serif;font-size:16px;line-height:1.55;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif;font-weight:500;margin:0;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  header{background:var(--ecru);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;}
+  .nav-row{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:20px;}
+  .logo{font-family:'Fraunces', serif;font-size:22px;font-weight:600;flex-shrink:0;}
+  .logo .dash{color:var(--brass);}
+  nav ul{list-style:none;display:flex;gap:28px;margin:0;padding:0;}
+  nav a{font-size:14.5px;}
+  .panier-btn{
+    position:relative;
+    border:1px solid var(--ink);
+    padding:9px 16px;
+    font-size:14px;
+    cursor:pointer;
+    background:none;
+    font-family:'Work Sans',sans-serif;
+    color:var(--ink);
+  }
+  .panier-count{
+    position:absolute;top:-8px;right:-8px;
+    background:var(--brass);color:var(--white);
+    width:20px;height:20px;border-radius:50%;
+    font-size:11px;display:flex;align-items:center;justify-content:center;
+  }
+
+  .boutique-head{padding:56px 0 36px;}
+  .boutique-head h1{font-size:clamp(30px,4vw,42px);max-width:16ch;}
+  .boutique-head p{max-width:48ch;color:#5c5952;margin-top:14px;font-size:15.5px;}
+
+  .filtres{display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;}
+  .filtre{
+    border:1px solid var(--line);
+    padding:9px 16px;
+    font-size:13.5px;
+    cursor:pointer;
+    background:var(--white);
+  }
+  .filtre.active{background:var(--ink);color:var(--ecru);border-color:var(--ink);}
+
+  .produits{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:1px;
+    background:var(--line);
+    border:1px solid var(--line);
+    margin-bottom:80px;
+  }
+  .produit{
+    background:var(--white);
+    padding:0 0 20px;
+    display:flex;
+    flex-direction:column;
+  }
+  .produit-visuel{
+    aspect-ratio:1/1;
+    background:var(--ecru-deep);
+    display:flex;align-items:center;justify-content:center;
+  }
+  .produit-visuel svg{width:70%;height:70%;}
+  .produit-info{padding:18px 20px 0;flex:1;display:flex;flex-direction:column;}
+  .produit-cat{font-size:12px;color:var(--sienna);}
+  .produit-info h3{font-size:16.5px;margin-top:6px;}
+  .produit-meta{font-size:13px;color:#5c5952;margin-top:4px;}
+  .produit-bas{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:auto;
+    padding-top:16px;
+  }
+  .produit-prix{font-family:'Fraunces',serif;font-size:19px;}
+  .btn-ajouter{
+    border:1px solid var(--ink);
+    background:var(--ink);
+    color:var(--ecru);
+    padding:9px 16px;
+    font-size:13px;
+    cursor:pointer;
+    font-family:'Work Sans',sans-serif;
+  }
+  .btn-ajouter.ajoute{background:var(--brass);border-color:var(--brass);}
+
+  /* ---- Panier drawer ---- */
+  .overlay{
+    display:none;
+    position:fixed;inset:0;
+    background:rgba(28,27,25,0.4);
+    z-index:100;
+  }
+  .overlay.open{display:block;}
+  .drawer{
+    position:fixed;top:0;right:0;bottom:0;
+    width:min(400px, 92vw);
+    background:var(--white);
+    z-index:101;
+    transform:translateX(100%);
+    transition:transform .25s ease;
+    display:flex;flex-direction:column;
+    border-left:1px solid var(--line);
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:22px 24px;border-bottom:1px solid var(--line);
+  }
+  .drawer-close{background:none;border:none;font-size:22px;cursor:pointer;color:var(--ink);}
+  .drawer-items{flex:1;overflow-y:auto;padding:16px 24px;}
+  .drawer-item{
+    display:flex;justify-content:space-between;align-items:center;
+    padding:14px 0;border-bottom:1px solid var(--line);gap:12px;
+  }
+  .drawer-item .nom{font-size:14.5px;}
+  .drawer-item .qte{font-size:12.5px;color:#5c5952;}
+  .drawer-item .prix{font-size:14.5px;font-weight:500;}
+  .drawer-empty{padding:40px 0;text-align:center;color:#5c5952;font-size:14.5px;}
+  .drawer-foot{padding:20px 24px 26px;border-top:1px solid var(--line);}
+  .drawer-total{display:flex;justify-content:space-between;font-size:16px;font-weight:600;margin-bottom:16px;}
+  .btn-primary{
+    display:block;width:100%;background:var(--ink);color:var(--ecru);
+    padding:15px;font-size:15px;font-weight:500;border:1px solid var(--ink);cursor:pointer;text-align:center;
+  }
+
+  @media (max-width:860px){
+    nav ul{display:none;}
+    .produits{grid-template-columns:1fr 1fr;}
+  }
+  @media (max-width:520px){
+    .produits{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a href="index.html" class="logo">Tailleur<span class="dash">-</span>Connect</a>
+    <nav>
+      <ul>
+        <li><a href="index.html#ateliers">Ateliers</a></li>
+        <li><a href="boutique.html">Boutique</a></li>
+        <li><a href="index.html#formations">Formations</a></li>
+      </ul>
+    </nav>
+    <button class="panier-btn" id="ouvrirPanier">Panier<span class="panier-count" id="panierCount">0</span></button>
+  </div>
+</header>
+
+<main>
+  <div class="wrap boutique-head">
+    <h1>Pagnes &amp; tissus, choisis pour votre prochaine pièce</h1>
+    <p>Wax, bazin, lin et coton — vendus au coupon, à commander seuls ou à associer à une commande sur-mesure chez un atelier partenaire.</p>
+    <div class="filtres">
+      <div class="filtre active" data-filtre="tous">Tous</div>
+      <div class="filtre" data-filtre="wax">Wax</div>
+      <div class="filtre" data-filtre="bazin">Bazin</div>
+      <div class="filtre" data-filtre="coton">Coton &amp; lin</div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="produits" id="produitsGrid"></div>
+  </div>
+</main>
+
+<div class="overlay" id="overlay"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3>Votre panier</h3>
+    <button class="drawer-close" id="fermerPanier">×</button>
+  </div>
+  <div class="drawer-items" id="drawerItems">
+    <div class="drawer-empty">Votre panier est vide.</div>
+  </div>
+  <div class="drawer-foot">
+    <div class="drawer-total"><span>Total</span><span id="drawerTotal">0 €</span></div>
+    <button class="btn-primary">Passer la commande</button>
+  </div>
+</div>
+
+<script>
+  var produits = [
+    {id:1, nom:"Wax Hollandais Riche Couleurs", cat:"wax", label:"Wax", metrage:"Coupon 6 yards", prix:45, motif:"losanges"},
+    {id:2, nom:"Wax Moderne Bleu Nuit", cat:"wax", label:"Wax", metrage:"Coupon 6 yards", prix:42, motif:"cercles"},
+    {id:3, nom:"Wax Impression Doré", cat:"wax", label:"Wax", metrage:"Coupon 6 yards", prix:48, motif:"zigzag"},
+    {id:4, nom:"Bazin Riche Blanc", cat:"bazin", label:"Bazin", metrage:"Coupon 5 yards", prix:60, motif:"quadrillage"},
+    {id:5, nom:"Bazin Getzner Bordeaux", cat:"bazin", label:"Bazin", metrage:"Coupon 5 yards", prix:65, motif:"losanges"},
+    {id:6, nom:"Lin Naturel Écru", cat:"coton", label:"Lin", metrage:"Au mètre", prix:14, motif:"uni"},
+    {id:7, nom:"Coton Popeline Rayé", cat:"coton", label:"Coton", metrage:"Au mètre", prix:11, motif:"rayures"},
+    {id:8, nom:"Wax Fond Vert Émeraude", cat:"wax", label:"Wax", metrage:"Coupon 6 yards", prix:44, motif:"cercles"},
+    {id:9, nom:"Coton Imprimé Floral", cat:"coton", label:"Coton", metrage:"Au mètre", prix:13, motif:"floral"}
+  ];
+
+  var motifsSvg = {
+    losanges: '<pattern id="p{id}" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#EDE5D3"/><path d="M12 0 L24 12 L12 24 L0 12 Z" fill="none" stroke="#B8892B" stroke-width="1"/></pattern>',
+    cercles: '<pattern id="p{id}" width="26" height="26" patternUnits="userSpaceOnUse"><rect width="26" height="26" fill="#EDE5D3"/><circle cx="13" cy="13" r="7" fill="none" stroke="#8B5E3C" stroke-width="1"/></pattern>',
+    zigzag: '<pattern id="p{id}" width="28" height="16" patternUnits="userSpaceOnUse"><rect width="28" height="16" fill="#EDE5D3"/><path d="M0 8 L7 0 L14 8 L21 0 L28 8" fill="none" stroke="#B8892B" stroke-width="1.3"/></pattern>',
+    quadrillage: '<pattern id="p{id}" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="20" height="20" fill="#EDE5D3"/><line x1="0" y1="0" x2="0" y2="20" stroke="#1C1B19" stroke-width="0.6" opacity="0.4"/><line x1="0" y1="0" x2="20" y2="0" stroke="#1C1B19" stroke-width="0.6" opacity="0.4"/></pattern>',
+    uni: '<pattern id="p{id}" width="10" height="10" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#EDE5D3"/></pattern>',
+    rayures: '<pattern id="p{id}" width="18" height="18" patternUnits="userSpaceOnUse"><rect width="18" height="18" fill="#EDE5D3"/><rect x="0" y="0" width="9" height="18" fill="#D9B36C" opacity="0.5"/></pattern>',
+    floral: '<pattern id="p{id}" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#EDE5D3"/><circle cx="15" cy="15" r="3" fill="#8B5E3C"/><circle cx="5" cy="6" r="2" fill="#B8892B"/><circle cx="25" cy="24" r="2" fill="#B8892B"/></pattern>'
+  };
+
+  function svgFor(p){
+    var pat = motifsSvg[p.motif].replace(/\{id\}/g, p.id);
+    return '<svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg"><defs>'+pat+'</defs><rect width="120" height="120" fill="url(#p'+p.id+')"/><rect width="120" height="120" fill="none" stroke="#1C1B19" stroke-width="1" opacity="0.15"/></svg>';
+  }
+
+  var grid = document.getElementById('produitsGrid');
+  var panier = {};
+
+  function renderProduits(filtre){
+    grid.innerHTML = '';
+    produits.filter(function(p){ return filtre === 'tous' || p.cat === filtre; }).forEach(function(p){
+      var div = document.createElement('div');
+      div.className = 'produit';
+      div.innerHTML =
+        '<div class="produit-visuel">' + svgFor(p) + '</div>' +
+        '<div class="produit-info">' +
+          '<div class="produit-cat">' + p.label + '</div>' +
+          '<h3>' + p.nom + '</h3>' +
+          '<div class="produit-meta">' + p.metrage + '</div>' +
+          '<div class="produit-bas">' +
+            '<span class="produit-prix">' + p.prix + ' €</span>' +
+            '<button class="btn-ajouter" data-id="' + p.id + '">Ajouter</button>' +
+          '</div>' +
+        '</div>';
+      grid.appendChild(div);
+    });
+    document.querySelectorAll('.btn-ajouter').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var id = btn.getAttribute('data-id');
+        panier[id] = (panier[id] || 0) + 1;
+        btn.textContent = 'Ajouté';
+        btn.classList.add('ajoute');
+        setTimeout(function(){ btn.textContent = 'Ajouter'; btn.classList.remove('ajoute'); }, 900);
+        renderPanier();
+      });
+    });
+  }
+
+  document.querySelectorAll('.filtre').forEach(function(f){
+    f.addEventListener('click', function(){
+      document.querySelectorAll('.filtre').forEach(function(x){x.classList.remove('active');});
+      f.classList.add('active');
+      renderProduits(f.getAttribute('data-filtre'));
+    });
+  });
+
+  function renderPanier(){
+    var items = Object.keys(panier);
+    var count = items.reduce(function(sum, id){ return sum + panier[id]; }, 0);
+    document.getElementById('panierCount').textContent = count;
+
+    var container = document.getElementById('drawerItems');
+    if(items.length === 0){
+      container.innerHTML = '<div class="drawer-empty">Votre panier est vide.</div>';
+      document.getElementById('drawerTotal').textContent = '0 €';
+      return;
+    }
+    var total = 0;
+    container.innerHTML = items.map(function(id){
+      var p = produits.find(function(x){ return x.id == id; });
+      var qte = panier[id];
+      var sousTotal = p.prix * qte;
+      total += sousTotal;
+      return '<div class="drawer-item"><div><div class="nom">' + p.nom + '</div><div class="qte">Qté ' + qte + '</div></div><div class="prix">' + sousTotal + ' €</div></div>';
+    }).join('');
+    document.getElementById('drawerTotal').textContent = total + ' €';
+  }
+
+  document.getElementById('ouvrirPanier').addEventListener('click', function(){
+    document.getElementById('drawer').classList.add('open');
+    document.getElementById('overlay').classList.add('open');
+  });
+  document.getElementById('fermerPanier').addEventListener('click', fermer);
+  document.getElementById('overlay').addEventListener('click', fermer);
+  function fermer(){
+    document.getElementById('drawer').classList.remove('open');
+    document.getElementById('overlay').classList.remove('open');
+  }
+
+  renderProduits('tous');
+</script>
+
+</body>
+</html>
