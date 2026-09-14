@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carnet de mesures — Tailleur-Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C1B19;--ecru:#F6F1E7;--ecru-deep:#EDE5D3;
+    --brass:#B8892B;--brass-soft:#D9B36C;--sienna:#8B5E3C;
+    --white:#FFFDF8;--line: rgba(28,27,25,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--ecru);color:var(--ink);font-family:'Work Sans', sans-serif;font-size:16px;line-height:1.55;}
+  h1,h2,h3{font-family:'Fraunces', serif;font-weight:500;margin:0;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  header{background:var(--ecru);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50;}
+  .nav-row{display:flex;align-items:center;justify-content:space-between;padding:18px 0;gap:20px;}
+  .logo{font-family:'Fraunces', serif;font-size:22px;font-weight:600;}
+  .logo .dash{color:var(--brass);}
+  nav ul{list-style:none;display:flex;gap:28px;margin:0;padding:0;}
+  nav a{font-size:14.5px;}
+
+  .head{padding:52px 0 30px;}
+  .head h1{font-size:clamp(28px,3.8vw,40px);max-width:18ch;}
+  .head p{max-width:52ch;color:#5c5952;margin-top:14px;font-size:15.5px;}
+
+  .layout{display:grid;grid-template-columns:230px 1fr;gap:40px;padding-bottom:90px;align-items:start;}
+
+  .menu-vetements{display:flex;flex-direction:column;gap:2px;position:sticky;top:90px;}
+  .menu-item{
+    padding:13px 16px;
+    font-size:14px;
+    border:1px solid var(--line);
+    background:var(--white);
+    cursor:pointer;
+  }
+  .menu-item.active{background:var(--ink);color:var(--ecru);border-color:var(--ink);}
+
+  .fiche-vetement{display:none;background:var(--white);border:1px solid var(--line);padding:32px;}
+  .fiche-vetement.active{display:block;}
+  .fiche-vetement h2{font-size:22px;}
+  .fiche-vetement .sous-titre{font-size:14px;color:#5c5952;margin-top:6px;}
+
+  .mesures-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px 24px;
+    margin-top:28px;
+  }
+  .champ-mesure{}
+  .champ-mesure label{
+    display:block;
+    font-size:13.5px;
+    margin-bottom:4px;
+    font-weight:500;
+  }
+  .champ-mesure .aide{
+    font-size:12px;
+    color:#5c5952;
+    margin-bottom:7px;
+    display:block;
+  }
+  .champ-input{
+    display:flex;
+    align-items:center;
+    border:1px solid var(--line);
+    background:var(--ecru);
+  }
+  .champ-input input{
+    flex:1;
+    border:none;
+    background:none;
+    padding:11px 12px;
+    font-family:'Work Sans',sans-serif;
+    font-size:14.5px;
+    color:var(--ink);
+    width:100%;
+  }
+  .champ-input input:focus{outline:none;}
+  .champ-input .unite{
+    padding:0 12px;
+    font-size:13px;
+    color:var(--sienna);
+    border-left:1px solid var(--line);
+    align-self:stretch;
+    display:flex;align-items:center;
+  }
+
+  .exemple-box{
+    margin-top:28px;
+    background:var(--ecru-deep);
+    border:1px solid var(--line);
+    padding:16px 18px;
+    font-size:13.5px;
+    color:#3a3835;
+  }
+  .exemple-box strong{color:var(--ink);}
+
+  .actions-carnet{display:flex;gap:14px;margin-top:30px;flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--ink);color:var(--ecru);
+    padding:14px 26px;font-size:14.5px;font-weight:500;
+    border:1px solid var(--ink);cursor:pointer;
+  }
+  .btn-secondary{
+    padding:14px 26px;font-size:14.5px;font-weight:500;
+    border:1px solid var(--ink);color:var(--ink);
+    background:none;cursor:pointer;
+  }
+  .confirmation{
+    display:none;
+    margin-top:20px;
+    background:var(--white);
+    border:1px solid var(--brass);
+    padding:14px 18px;
+    font-size:13.5px;
+  }
+  .confirmation.show{display:block;}
+
+  @media (max-width:860px){
+    .layout{grid-template-columns:1fr;}
+    .menu-vetements{
+      position:static;
+      flex-direction:row;
+      overflow-x:auto;
+      gap:8px;
+      padding-bottom:6px;
+    }
+    .menu-item{white-space:nowrap;}
+    .mesures-grid{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a href="index.html" class="logo">Tailleur<span class="dash">-</span>Connect</a>
+    <nav>
+      <ul>
+        <li><a href="index.html#ateliers">Ateliers</a></li>
+        <li><a href="boutique.html">Boutique</a></li>
+        <li><a href="carnet-mesures.html">Carnet de mesures</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <div class="wrap head">
+    <h1>Votre carnet de mesures</h1>
+    <p>Prenez vos mesures une fois, par type de vêtement, et réutilisez-les pour chaque commande sur-mesure — plus besoin de les redonner à chaque atelier.</p>
+  </div>
+
+  <div class="wrap layout">
+    <div class="menu-vetements" id="menuVetements"></div>
+    <div id="fichesContainer"></div>
+  </div>
+</main>
+
+<script>
+  var vetements = [
+    {
+      id:"jupe-longue",
+      nom:"Jupe droite longue",
+      sousTitre:"Mesures à prendre en sous-vêtements, mètre-ruban bien horizontal",
+      exemple:"Contour taille : 85 cm — Longueur totale : 121 cm",
+      champs:[
+        {label:"Tour de taille", aide:"Au point le plus étroit, sans serrer", unite:"cm"},
+        {label:"Tour de bassin", aide:"Au point le plus fort des hanches", unite:"cm"},
+        {label:"Longueur totale", aide:"De la ligne de taille jusqu'à la cheville", unite:"cm"}
+      ]
+    },
+    {
+      id:"jupe-courte",
+      nom:"Jupe droite courte",
+      sousTitre:"Même prise de mesure que la jupe longue, longueur ajustée",
+      exemple:"Contour taille : 85 cm — Longueur totale : 52 cm",
+      champs:[
+        {label:"Tour de taille", aide:"Au point le plus étroit, sans serrer", unite:"cm"},
+        {label:"Tour de bassin", aide:"Au point le plus fort des hanches", unite:"cm"},
+        {label:"Longueur totale", aide:"De la ligne de taille jusqu'au genou ou mi-cuisse", unite:"cm"}
+      ]
+    },
+    {
+      id:"pantalon",
+      nom:"Pantalon",
+      sousTitre:"Idéalement mesuré assis pour le montant, debout pour le reste",
+      exemple:"Contour taille : 85 cm — Hauteur du montant : 28 cm — Longueur totale : 104 cm",
+      champs:[
+        {label:"Tour de taille", aide:"Au point le plus étroit, sans serrer", unite:"cm"},
+        {label:"Tour de bassin", aide:"Au point le plus fort des hanches", unite:"cm"},
+        {label:"Hauteur du montant", aide:"Assis(e), de la taille jusqu'au siège", unite:"cm"},
+        {label:"Longueur d'entrejambe", aide:"De l'entrejambe jusqu'à la cheville", unite:"cm"},
+        {label:"Tour de cuisse", aide:"Au point le plus large de la cuisse", unite:"cm"},
+        {label:"Tour de genou", aide:"Jambe légèrement fléchie", unite:"cm"},
+        {label:"Tour de bas de jambe", aide:"À l'ourlet souhaité", unite:"cm"},
+        {label:"Longueur totale", aide:"De la ligne de taille jusqu'à la cheville", unite:"cm"}
+      ]
+    },
+    {
+      id:"culotte",
+      nom:"Culotte / sous-vêtement",
+      sousTitre:"Mesures prises près du corps, sans serrer",
+      exemple:"Contour taille : 74 cm — Contour bassin : 96 cm",
+      champs:[
+        {label:"Tour de taille", aide:"Au point le plus étroit", unite:"cm"},
+        {label:"Tour de bassin", aide:"Au point le plus fort des hanches", unite:"cm"},
+        {label:"Hauteur du montant", aide:"De la taille à l'entrejambe", unite:"cm"}
+      ]
+    },
+    {
+      id:"robe-droite",
+      nom:"Robe droite",
+      sousTitre:"Silhouette ajustée, mesures prises sur sous-vêtements",
+      exemple:"Tour de poitrine : 92 cm — Longueur totale : 118 cm",
+      champs:[
+        {label:"Tour de poitrine", aide:"Au point le plus fort, sans serrer", unite:"cm"},
+        {label:"Tour de taille", aide:"Au point le plus étroit", unite:"cm"},
+        {label:"Tour de bassin", aide:"Au point le plus fort des hanches", unite:"cm"},
+        {label:"Largeur d'épaules", aide:"D'une épaule à l'autre, dans le dos", unite:"cm"},
+        {label:"Longueur taille dos", aide:"De la nuque jusqu'à la taille", unite:"cm"},
+        {label:"Longueur totale", aide:"De l'épaule jusqu'à l'ourlet souhaité", unite:"cm"}
+      ]
+    },
+    {
+      id:"robe-evasee",
+      nom:"Robe évasée",
+      sousTitre:"Plus d'aisance au niveau du bassin et de l'ourlet",
+      exemple:"Tour de poitrine : 92 cm — Longueur totale : 125 cm",
+      champs:[
+        {label:"Tour de poitrine", aide:"Au point le plus fort, sans serrer", unite:"cm"},
+        {label:"Tour de taille", aide:"Au point le plus étroit", unite:"cm"},
+        {label:"Hauteur poitrine", aide:"De la base du cou à la pointe de poitrine", unite:"cm"},
+        {label:"Largeur d'épaules", aide:"D'une épaule à l'autre, dans le dos", unite:"cm"},
+        {label:"Longueur taille dos", aide:"De la nuque jusqu'à la taille", unite:"cm"},
+        {label:"Longueur totale", aide:"De l'épaule jusqu'à l'ourlet souhaité", unite:"cm"}
+      ]
+    },
+    {
+      id:"chemise",
+      nom:"Chemise",
+      sousTitre:"Prendre par-dessus un tee-shirt fin pour plus de confort",
+      exemple:"Tour de poitrine : 98 cm — Longueur de manche : 61 cm",
+      champs:[
+        {label:"Tour de poitrine", aide:"Au point le plus fort, sans serrer", unite:"cm"},
+        {label:"Tour de taille", aide:"Au point le plus étroit", unite:"cm"},
+        {label:"Carrure dos", aide:"À mi-hauteur entre encolure et buste, d'une emmanchure à l'autre", unite:"cm"},
+        {label:"Longueur de manche", aide:"De l'épaule jusqu'au poignet souhaité", unite:"cm"},
+        {label:"Tour de bras", aide:"Au point le plus large du bras", unite:"cm"},
+        {label:"Tour de poignet", aide:"Autour du poignet, aisance incluse", unite:"cm"},
+        {label:"Hauteur d'emmanchure", aide:"Du bord de l'épaule jusque sous le bras", unite:"cm"},
+        {label:"Longueur totale", aide:"De l'encolure jusqu'au bas souhaité", unite:"cm"}
+      ]
+    }
+  ];
+
+  var menu = document.getElementById('menuVetements');
+  var container = document.getElementById('fichesContainer');
+
+  vetements.forEach(function(v, i){
+    var item = document.createElement('div');
+    item.className = 'menu-item' + (i === 0 ? ' active' : '');
+    item.textContent = v.nom;
+    item.setAttribute('data-target', v.id);
+    menu.appendChild(item);
+
+    var fiche = document.createElement('div');
+    fiche.className = 'fiche-vetement' + (i === 0 ? ' active' : '');
+    fiche.id = 'fiche-' + v.id;
+
+    var champsHtml = v.champs.map(function(c){
+      return '<div class="champ-mesure">' +
+        '<label>' + c.label + '</label>' +
+        '<span class="aide">' + c.aide + '</span>' +
+        '<div class="champ-input"><input type="number" step="0.5" placeholder="0"><span class="unite">' + c.unite + '</span></div>' +
+      '</div>';
+    }).join('');
+
+    fiche.innerHTML =
+      '<h2>' + v.nom + '</h2>' +
+      '<div class="sous-titre">' + v.sousTitre + '</div>' +
+      '<div class="mesures-grid">' + champsHtml + '</div>' +
+      '<div class="exemple-box">Exemple rempli : <strong>' + v.exemple + '</strong></div>' +
+      '<div class="actions-carnet">' +
+        '<button class="btn-primary" data-save="' + v.id + '">Enregistrer ces mesures</button>' +
+        '<a href="index.html#ateliers" class="btn-secondary" style="text-decoration:none;display:inline-flex;align-items:center;">Trouver un atelier pour cette pièce</a>' +
+      '</div>' +
+      '<div class="confirmation" id="confirm-' + v.id + '">Mesures enregistrées pour cette pièce. Elles seront proposées automatiquement lors de votre prochaine commande sur-mesure.</div>';
+
+    container.appendChild(fiche);
+  });
+
+  menu.querySelectorAll('.menu-item').forEach(function(item){
+    item.addEventListener('click', function(){
+      var target = item.getAttribute('data-target');
+      menu.querySelectorAll('.menu-item').forEach(function(m){ m.classList.remove('active'); });
+      item.classList.add('active');
+      document.querySelectorAll('.fiche-vetement').forEach(function(f){ f.classList.remove('active'); });
+      document.getElementById('fiche-' + target).classList.add('active');
+    });
+  });
+
+  container.addEventListener('click', function(e){
+    if(e.target.matches('[data-save]')){
+      var id = e.target.getAttribute('data-save');
+      document.getElementById('confirm-' + id).classList.add('show');
+    }
+  });
+</script>
+
+</body>
+</html>
