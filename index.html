@@ -372,9 +372,78 @@
     gap:10px;
   }
 
+  /* ---- Mobile nav dropdown ---- */
+  .mobile-nav{
+    display:none;
+    flex-direction:column;
+    background:var(--white);
+    border-bottom:1px solid var(--line);
+  }
+  .mobile-nav.open{display:flex;}
+  .mobile-nav a{
+    padding:16px 24px;
+    border-bottom:1px solid var(--line);
+    font-size:15px;
+  }
+  .mobile-nav a:last-child{border-bottom:none;}
+
+  /* ---- Galerie savoir-faire ---- */
+  .galerie-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:24px;
+  }
+  .galerie-card{
+    background:var(--white);
+    border:1px solid var(--line);
+    padding:22px;
+  }
+  .galerie-card svg{width:100%;height:160px;}
+  .galerie-card h3{font-size:16.5px;margin-top:16px;}
+  .galerie-card p{font-size:13.5px;color:#5c5952;margin-top:6px;}
+
+  /* ---- Formations ---- */
+  .formations{
+    background:var(--ecru-deep);
+    border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);
+  }
+  .formations-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:40px;
+    align-items:center;
+  }
+  .formations-list{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+    margin-top:24px;
+  }
+  .formation-item{
+    background:var(--white);
+    border:1px solid var(--line);
+    padding:18px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:16px;
+  }
+  .formation-item h4{font-size:15.5px;font-weight:500;margin:0 0 3px;font-family:'Work Sans',sans-serif;}
+  .formation-item span{font-size:13px;color:#5c5952;}
+  .formation-item .niveau{
+    font-size:12px;
+    color:var(--brass);
+    border:1px solid var(--brass);
+    padding:4px 10px;
+    white-space:nowrap;
+  }
+
   @media (max-width:860px){
     nav ul, .nav-cta{display:none;}
     .burger{display:block;}
+    .galerie-grid{grid-template-columns:1fr;}
+    .formations-grid{grid-template-columns:1fr;}
     .hero-grid{grid-template-columns:1fr;}
     .hero-figure{order:-1;aspect-ratio:16/10;}
     .stats{grid-template-columns:1fr;}
@@ -397,12 +466,19 @@
       <ul>
         <li><a href="#ateliers">Ateliers</a></li>
         <li><a href="#comment">Comment ça marche</a></li>
-        <li><a href="#paiement">Paiement &amp; livraison</a></li>
+        <li><a href="#formations">Formations</a></li>
         <li><a href="#devenir">Devenir couturier</a></li>
       </ul>
     </nav>
     <a href="#ateliers" class="nav-cta">Trouver un atelier</a>
-    <button class="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+    <button class="burger" id="burgerBtn" aria-label="Menu" aria-expanded="false"><span></span><span></span><span></span></button>
+  </div>
+  <div class="mobile-nav" id="mobileNav">
+    <a href="#ateliers">Ateliers</a>
+    <a href="#comment">Comment ça marche</a>
+    <a href="#paiement">Paiement &amp; livraison</a>
+    <a href="#formations">Formations couture</a>
+    <a href="#devenir">Devenir couturier</a>
   </div>
 </header>
 
@@ -535,6 +611,106 @@
     </div>
   </section>
 
+  <section class="block" id="galerie">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Le savoir-faire derrière chaque commande</h2>
+        <p>Patron, prise de mesure, finitions : ce que nos ateliers maîtrisent, du croquis à la pièce finie.</p>
+      </div>
+      <div class="galerie-grid">
+        <div class="galerie-card">
+          <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
+            <rect width="240" height="160" fill="#F6F1E7"/>
+            <g stroke="#1C1B19" stroke-width="1" fill="none">
+              <path d="M40 30 L200 30 L190 140 L60 140 Z"/>
+              <path d="M40 30 Q30 70 55 90 Q35 110 60 140" stroke="#8B5E3C" stroke-width="1.2"/>
+              <line x1="70" y1="45" x2="170" y2="45" stroke-dasharray="4 4"/>
+              <line x1="65" y1="70" x2="175" y2="70" stroke-dasharray="4 4"/>
+              <line x1="62" y1="95" x2="178" y2="95" stroke-dasharray="4 4"/>
+              <circle cx="120" cy="30" r="3" fill="#B8892B"/>
+            </g>
+            <text x="120" y="152" text-anchor="middle" font-family="Work Sans" font-size="9" fill="#8B5E3C">Patron numéroté</text>
+          </svg>
+          <h3>Patrons sur-mesure</h3>
+          <p>Chaque pièce démarre d'un patron adapté aux mesures exactes du client, pas d'une taille standard.</p>
+        </div>
+        <div class="galerie-card">
+          <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
+            <rect width="240" height="160" fill="#F6F1E7"/>
+            <g stroke="#1C1B19" stroke-width="1.3" fill="none">
+              <circle cx="120" cy="38" r="16"/>
+              <path d="M104 54 L104 110 L136 110 L136 54"/>
+              <line x1="104" y1="72" x2="136" y2="72"/>
+              <line x1="108" y1="110" x2="104" y2="140"/>
+              <line x1="132" y1="110" x2="136" y2="140"/>
+            </g>
+            <line x1="70" y1="72" x2="104" y2="72" stroke="#B8892B" stroke-width="1"/>
+            <line x1="136" y1="72" x2="170" y2="72" stroke="#B8892B" stroke-width="1"/>
+            <text x="70" y="68" text-anchor="middle" font-family="Work Sans" font-size="8" fill="#8B5E3C">Tour poitrine</text>
+            <text x="170" y="68" text-anchor="middle" font-family="Work Sans" font-size="8" fill="#8B5E3C">92 cm</text>
+            <text x="120" y="152" text-anchor="middle" font-family="Work Sans" font-size="9" fill="#8B5E3C">Fiche de mesures</text>
+          </svg>
+          <h3>Prise de mesure précise</h3>
+          <p>Un guide de mesures standardisé, rempli en atelier ou à domicile, suit chaque commande.</p>
+        </div>
+        <div class="galerie-card">
+          <svg viewBox="0 0 240 160" xmlns="http://www.w3.org/2000/svg">
+            <rect width="240" height="160" fill="#F6F1E7"/>
+            <g fill="none" stroke="#1C1B19" stroke-width="1">
+              <path d="M50 40 Q120 20 190 40 L190 60 Q120 45 50 60 Z" fill="#EDE5D3"/>
+              <path d="M50 70 Q120 55 190 70 L190 90 Q120 75 50 90 Z" fill="#F6F1E7"/>
+              <path d="M50 100 Q120 85 190 100 L190 120 Q120 105 50 120 Z" fill="#EDE5D3"/>
+            </g>
+            <circle cx="60" cy="50" r="2" fill="#B8892B"/>
+            <circle cx="60" cy="80" r="2" fill="#B8892B"/>
+            <circle cx="60" cy="110" r="2" fill="#B8892B"/>
+            <text x="120" y="152" text-anchor="middle" font-family="Work Sans" font-size="9" fill="#8B5E3C">Sélection de tissus</text>
+          </svg>
+          <h3>Choix des tissus</h3>
+          <p>Wax, coton, lin ou tissus fournis par le client : chaque atelier précise ce qu'il travaille.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="formations" id="formations">
+    <div class="wrap" style="padding:80px 24px;">
+      <div class="formations-grid">
+        <div>
+          <h2 style="font-size:clamp(26px,3vw,34px);max-width:14ch;">Envie d'apprendre la couture ?</h2>
+          <p style="margin-top:16px;font-size:15.5px;color:#5c5952;max-width:42ch;">Certains de nos ateliers partenaires proposent aussi des formations, en initiation ou en perfectionnement, sur place ou en petits groupes.</p>
+          <div class="hero-actions" style="margin-top:26px;">
+            <a href="#" class="btn-primary">Trouver une formation</a>
+            <a href="#" class="btn-secondary">Proposer une formation</a>
+          </div>
+        </div>
+        <div class="formations-list">
+          <div class="formation-item">
+            <div>
+              <h4>Initiation couture — bases de la machine</h4>
+              <span>Atelier Amara · Bruxelles · 4 séances</span>
+            </div>
+            <span class="niveau">Débutant</span>
+          </div>
+          <div class="formation-item">
+            <div>
+              <h4>Prise de patron et coupe</h4>
+              <span>Maison Ilunga · Liège · 6 séances</span>
+            </div>
+            <span class="niveau">Intermédiaire</span>
+          </div>
+          <div class="formation-item">
+            <div>
+              <h4>Finitions haute-couture</h4>
+              <span>Kanzu Studio · Anvers · 3 séances</span>
+            </div>
+            <span class="niveau">Avancé</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <section class="paiement" id="paiement">
     <div class="wrap">
       <h2>Un paiement en deux temps, clair pour tout le monde</h2>
@@ -583,5 +759,19 @@
   </div>
 </footer>
 
+<script>
+  var burgerBtn = document.getElementById('burgerBtn');
+  var mobileNav = document.getElementById('mobileNav');
+  burgerBtn.addEventListener('click', function(){
+    var isOpen = mobileNav.classList.toggle('open');
+    burgerBtn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+  });
+  mobileNav.querySelectorAll('a').forEach(function(link){
+    link.addEventListener('click', function(){
+      mobileNav.classList.remove('open');
+      burgerBtn.setAttribute('aria-expanded', 'false');
+    });
+  });
+</script>
 </body>
 </html>
