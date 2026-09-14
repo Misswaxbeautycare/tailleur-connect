@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Fiche atelier — Tailleur-Connect</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Work+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#1C1B19;
+    --ecru:#F6F1E7;
+    --ecru-deep:#EDE5D3;
+    --brass:#B8892B;
+    --brass-soft:#D9B36C;
+    --sienna:#8B5E3C;
+    --white:#FFFDF8;
+    --line: rgba(28,27,25,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--ecru);
+    color:var(--ink);
+    font-family:'Work Sans', sans-serif;
+    font-size:16px;
+    line-height:1.55;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif;font-weight:500;margin:0;letter-spacing:-0.01em;}
+  a{color:inherit;text-decoration:none;}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 24px;}
+
+  header{background:var(--ecru);border-bottom:1px solid var(--line);}
+  .nav-row{display:flex;align-items:center;justify-content:space-between;padding:18px 0;}
+  .logo{font-family:'Fraunces', serif;font-size:22px;font-weight:600;}
+  .logo .dash{color:var(--brass);}
+  .retour{font-size:14px;display:flex;align-items:center;gap:6px;}
+
+  .fiche{padding:48px 0 90px;}
+  .fiche-top{
+    display:grid;
+    grid-template-columns:auto 1fr auto;
+    gap:24px;
+    align-items:center;
+    padding-bottom:32px;
+    border-bottom:1px solid var(--line);
+    margin-bottom:36px;
+  }
+  .initiale-grande{
+    width:72px;height:72px;
+    background:var(--ink);
+    color:var(--ecru);
+    font-family:'Fraunces',serif;
+    font-size:28px;
+    display:flex;align-items:center;justify-content:center;
+  }
+  .fiche-nom h1{font-size:30px;}
+  .fiche-meta{display:flex;gap:16px;margin-top:8px;font-size:14px;color:#5c5952;flex-wrap:wrap;}
+  .fiche-note{
+    text-align:right;
+    font-size:14px;
+  }
+  .fiche-note .score{font-family:'Fraunces',serif;font-size:26px;color:var(--brass);}
+
+  .fiche-body{
+    display:grid;
+    grid-template-columns:1.3fr 0.9fr;
+    gap:48px;
+  }
+  .bloc{margin-bottom:36px;}
+  .bloc h2{font-size:19px;margin-bottom:12px;}
+  .bloc p{color:#3a3835;font-size:15px;max-width:56ch;}
+  .tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+  .tag{
+    border:1px solid var(--line);
+    padding:6px 14px;
+    font-size:13px;
+    background:var(--white);
+  }
+  .avis-item{
+    border-top:1px solid var(--line);
+    padding:16px 0;
+  }
+  .avis-item:first-child{border-top:none;padding-top:0;}
+  .avis-head{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;}
+  .avis-head .note{color:var(--brass);font-weight:500;}
+  .avis-item p{font-size:14.5px;color:#3a3835;}
+
+  /* ---- Panneau réservation ---- */
+  .panneau{
+    background:var(--white);
+    border:1px solid var(--line);
+    padding:28px;
+    position:sticky;
+    top:24px;
+    align-self:start;
+  }
+  .switch{
+    display:flex;
+    border:1px solid var(--ink);
+    margin-bottom:24px;
+  }
+  .switch button{
+    flex:1;
+    padding:12px;
+    background:none;
+    border:none;
+    font-family:'Work Sans',sans-serif;
+    font-size:14px;
+    font-weight:500;
+    cursor:pointer;
+    color:var(--ink);
+  }
+  .switch button.active{background:var(--ink);color:var(--ecru);}
+
+  .panel-view{display:none;}
+  .panel-view.active{display:block;}
+
+  label{display:block;font-size:13px;color:#5c5952;margin-bottom:6px;margin-top:16px;}
+  label:first-of-type{margin-top:0;}
+  select, input{
+    width:100%;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    background:var(--ecru);
+    font-family:'Work Sans',sans-serif;
+    font-size:14.5px;
+    color:var(--ink);
+  }
+  .creneaux{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+  .creneau{
+    border:1px solid var(--line);
+    padding:9px 4px;
+    text-align:center;
+    font-size:13px;
+    cursor:pointer;
+    background:var(--ecru);
+  }
+  .creneau.selected{background:var(--ink);color:var(--ecru);border-color:var(--ink);}
+
+  .recap{
+    margin-top:20px;
+    padding-top:18px;
+    border-top:1px solid var(--line);
+    font-size:14px;
+  }
+  .recap-row{display:flex;justify-content:space-between;margin-bottom:8px;}
+  .recap-row.total{font-weight:600;font-size:15.5px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line);}
+
+  .btn-primary{
+    display:block;
+    width:100%;
+    background:var(--ink);
+    color:var(--ecru);
+    padding:15px;
+    font-size:15px;
+    font-weight:500;
+    border:1px solid var(--ink);
+    margin-top:20px;
+    cursor:pointer;
+    text-align:center;
+  }
+  .note-legale{font-size:12px;color:#5c5952;margin-top:12px;text-align:center;}
+
+  .livraison-opts{display:flex;gap:10px;margin-top:8px;}
+  .livraison-opt{
+    flex:1;
+    border:1px solid var(--line);
+    padding:10px;
+    font-size:13px;
+    text-align:center;
+    cursor:pointer;
+    background:var(--ecru);
+  }
+  .livraison-opt.selected{background:var(--ink);color:var(--ecru);border-color:var(--ink);}
+
+  @media (max-width:860px){
+    .fiche-body{grid-template-columns:1fr;}
+    .fiche-top{grid-template-columns:auto 1fr;}
+    .fiche-note{grid-column:1/-1;text-align:left;}
+    .panneau{position:static;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap nav-row">
+    <a href="index.html" class="logo">Tailleur<span class="dash">-</span>Connect</a>
+    <a href="index.html#ateliers" class="retour">← Tous les ateliers</a>
+  </div>
+</header>
+
+<main class="fiche">
+  <div class="wrap">
+    <div class="fiche-top">
+      <div class="initiale-grande" id="initiale">A</div>
+      <div class="fiche-nom">
+        <h1 id="nomAtelier">Atelier Amara</h1>
+        <div class="fiche-meta">
+          <span id="ville">Bruxelles</span>
+          <span id="specialite">Robes de cérémonie, retouches</span>
+        </div>
+      </div>
+      <div class="fiche-note">
+        <div class="score" id="note">4,8</div>
+        <div id="avisCount">96 avis</div>
+      </div>
+    </div>
+
+    <div class="fiche-body">
+      <div>
+        <div class="bloc">
+          <h2>À propos de l'atelier</h2>
+          <p id="description">Atelier spécialisé dans les robes de cérémonie et les retouches, avec un savoir-faire tourné vers les finitions soignées et les délais tenus.</p>
+          <div class="tags" id="tags">
+            <span class="tag">Wax &amp; tissus fournis</span>
+            <span class="tag">Retrait en atelier</span>
+            <span class="tag">Livraison à domicile</span>
+          </div>
+        </div>
+        <div class="bloc">
+          <h2>Avis clients</h2>
+          <div class="avis-item">
+            <div class="avis-head"><span>Sarah K.</span><span class="note">5,0</span></div>
+            <p>Robe parfaite, exactement les mesures demandées. Livraison à domicile dans les temps.</p>
+          </div>
+          <div class="avis-item">
+            <div class="avis-head"><span>Nadia B.</span><span class="note">4,5</span></div>
+            <p>Très bon accueil pour la prise de mesure, un petit délai supplémentaire sur la commande.</p>
+          </div>
+          <div class="avis-item">
+            <div class="avis-head"><span>Grace M.</span><span class="note">5,0</span></div>
+            <p>Deuxième commande chez eux, toujours aussi soigné. Je recommande.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="panneau">
+        <div class="switch">
+          <button id="btnRdv" class="active">Rendez-vous</button>
+          <button id="btnCommande">Commande sur-mesure</button>
+        </div>
+
+        <div class="panel-view active" id="viewRdv">
+          <label>Type de rendez-vous</label>
+          <select>
+            <option>Prise de mesure</option>
+            <option>Essayage</option>
+            <option>Retouche</option>
+          </select>
+          <label>Date souhaitée</label>
+          <input type="date">
+          <label>Créneaux disponibles</label>
+          <div class="creneaux">
+            <div class="creneau">9h00</div>
+            <div class="creneau selected">10h30</div>
+            <div class="creneau">14h00</div>
+            <div class="creneau">15h30</div>
+            <div class="creneau">17h00</div>
+            <div class="creneau">18h00</div>
+          </div>
+          <button class="btn-primary">Confirmer le rendez-vous</button>
+          <div class="note-legale">Rendez-vous gratuit, sans engagement.</div>
+        </div>
+
+        <div class="panel-view" id="viewCommande">
+          <label>Type de pièce</label>
+          <select>
+            <option>Robe de cérémonie</option>
+            <option>Costume</option>
+            <option>Tenue traditionnelle</option>
+            <option>Autre / sur devis</option>
+          </select>
+          <label>Vos mesures</label>
+          <select>
+            <option>À prendre en atelier (RDV inclus)</option>
+            <option>Déjà fournies</option>
+          </select>
+          <label>Livraison</label>
+          <div class="livraison-opts">
+            <div class="livraison-opt selected">Retrait atelier</div>
+            <div class="livraison-opt">Livraison domicile</div>
+          </div>
+          <div class="recap">
+            <div class="recap-row"><span>Prix estimé de la pièce</span><span>180 €</span></div>
+            <div class="recap-row"><span>Acompte à régler maintenant (30%)</span><span>54 €</span></div>
+            <div class="recap-row total"><span>Solde à régler à la livraison</span><span>126 €</span></div>
+          </div>
+          <button class="btn-primary">Payer l'acompte et lancer la commande</button>
+          <div class="note-legale">Paiement sécurisé. Le solde est réglé au retrait ou à la livraison.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+  var ateliers = {
+    amara: {
+      initiale:"A", nom:"Atelier Amara", ville:"Bruxelles",
+      specialite:"Robes de cérémonie, retouches", note:"4,8", avis:"96 avis",
+      description:"Atelier spécialisé dans les robes de cérémonie et les retouches, avec un savoir-faire tourné vers les finitions soignées et les délais tenus.",
+      prix:180
+    },
+    ilunga: {
+      initiale:"M", nom:"Maison Ilunga", ville:"Liège",
+      specialite:"Costumes homme, wax moderne", note:"4,9", avis:"61 avis",
+      description:"Maison spécialisée dans les costumes pour homme et les créations en wax moderne, pensée pour les tenues de mariage et d'événement.",
+      prix:260
+    },
+    kanzu: {
+      initiale:"K", nom:"Kanzu Studio", ville:"Anvers",
+      specialite:"Prise de mesure, essayages", note:"4,7", avis:"38 avis",
+      description:"Studio centré sur la prise de mesure et les essayages, en lien avec un réseau d'ateliers de fabrication partenaires.",
+      prix:140
+    }
+  };
+
+  var params = new URLSearchParams(window.location.search);
+  var id = params.get('id') || 'amara';
+  var a = ateliers[id] || ateliers.amara;
+
+  document.getElementById('initiale').textContent = a.initiale;
+  document.getElementById('nomAtelier').textContent = a.nom;
+  document.getElementById('ville').textContent = a.ville;
+  document.getElementById('specialite').textContent = a.specialite;
+  document.getElementById('note').textContent = a.note;
+  document.getElementById('avisCount').textContent = a.avis;
+  document.getElementById('description').textContent = a.description;
+  document.title = a.nom + " — Tailleur-Connect";
+
+  var prix = a.prix;
+  var acompte = Math.round(prix * 0.3);
+  var solde = prix - acompte;
+  document.querySelectorAll('.recap-row span:last-child')[0].textContent = prix + " €";
+  document.querySelectorAll('.recap-row span:last-child')[1].textContent = acompte + " €";
+  document.querySelectorAll('.recap-row span:last-child')[2].textContent = solde + " €";
+
+  var btnRdv = document.getElementById('btnRdv');
+  var btnCommande = document.getElementById('btnCommande');
+  var viewRdv = document.getElementById('viewRdv');
+  var viewCommande = document.getElementById('viewCommande');
+
+  btnRdv.addEventListener('click', function(){
+    btnRdv.classList.add('active');
+    btnCommande.classList.remove('active');
+    viewRdv.classList.add('active');
+    viewCommande.classList.remove('active');
+  });
+  btnCommande.addEventListener('click', function(){
+    btnCommande.classList.add('active');
+    btnRdv.classList.remove('active');
+    viewCommande.classList.add('active');
+    viewRdv.classList.remove('active');
+  });
+
+  document.querySelectorAll('.creneau').forEach(function(c){
+    c.addEventListener('click', function(){
+      document.querySelectorAll('.creneau').forEach(function(x){x.classList.remove('selected');});
+      c.classList.add('selected');
+    });
+  });
+  document.querySelectorAll('.livraison-opt').forEach(function(o){
+    o.addEventListener('click', function(){
+      document.querySelectorAll('.livraison-opt').forEach(function(x){x.classList.remove('selected');});
+      o.classList.add('selected');
+    });
+  });
+</script>
+
+</body>
+</html>
